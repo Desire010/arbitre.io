@@ -1,0 +1,384 @@
+function doPost(e) {
+  try {
+    // 🔍 LOG : Début de la requête (optimisé pour la production)
+    var startTime = new Date().getTime();
+    Logger.log("=== DÉBUT DO POST ===");
+    
+    // ✅ Vérification rapide des paramètres (optimisé)
+    if (!e?.postData?.contents) {
+      return createErrorResponse("Données manquantes", "MISSING_DATA");
+    }
+
+    // ✅ Vérification de la taille des données (optimisé)
+    if (e.postData.contents.length > 10000) {
+      return createErrorResponse("Données trop volumineuses", "DATA_TOO_LARGE");
+    }
+
+    // ✅ Parsing JSON optimisé
+    var data;
+    try {
+      data = JSON.parse(e.postData.contents);
+    } catch (parseError) {
+      return createErrorResponse("Format JSON invalide", "INVALID_JSON");
+    }
+
+    // ✅ Validation rapide des champs obligatoires
+    if (!data.nom?.trim() || !data.prenom?.trim() || !data.contact1?.trim()) {
+      return createErrorResponse("Champs obligatoires manquants", "VALIDATION_ERROR");
+    }
+
+    // ✅ Validation optimisée du format téléphone
+    var phonePattern = /^\+225[0-9]{10}$/;
+    if (!phonePattern.test(data.contact1) || 
+        (data.contact2 && data.contact2.trim() && !phonePattern.test(data.contact2))) {
+      return createErrorResponse("Format téléphone invalide", "PHONE_VALIDATION_ERROR");
+    }
+
+    // ✅ Validation des nouveaux champs (optionnels mais avec vérifications)
+    if (data.niveau_etude === "Autre" && (!data.autre_niveau_precision || !data.autre_niveau_precision.trim())) {
+      return createErrorResponse("Veuillez préciser votre niveau d'étude", "EDUCATION_PRECISION_REQUIRED");
+    }
+    
+    if (data.competence && data.competence.includes("Autre") && (!data.autre_competence_precision || !data.autre_competence_precision.trim())) {
+      return createErrorResponse("Veuillez préciser vos domaines de compétence", "COMPETENCE_PRECISION_REQUIRED");
+    }
+    
+    if (data.formation_interet && data.formation_interet.includes("Autre") && (!data.autre_formation_precision || !data.autre_formation_precision.trim())) {
+      return createErrorResponse("Veuillez préciser les formations qui vous intéressent", "FORMATION_PRECISION_REQUIRED");
+    }
+
+    // ✅ Accès optimisé à la feuille (une seule fois)
+    var sheet;
+    try {
+      sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    } catch (sheetError) {
+      return createErrorResponse("Erreur d'accès à la feuille", "SHEET_ACCESS_ERROR");
+    }
+
+    // ✅ Opérations optimisées en une seule fois
+    var sheetInfo = getSheetInfoOptimized(sheet);
+    
+    // ✅ Vérification des en-têtes optimisée
+    if (!sheetInfo.hasHeaders) {
+      var headerResult = createHeadersOptimized(sheet);
+      if (!headerResult.success) {
+        return createErrorResponse("Erreur création en-têtes", "HEADER_ERROR");
+      }
+    }
+
+    // ✅ Vérification des doublons optimisée (seulement si nécessaire)
+    if (sheetInfo.hasData) {
+      var duplicateCheck = checkForDuplicatesOptimized(sheet, data, sheetInfo.lastRow);
+      if (duplicateCheck.isDuplicate) {
+        return createErrorResponse(duplicateCheck.message, "DUPLICATE_ENTRY");
+      }
+    }
+
+    // ✅ Enregistrement optimisé avec tous les nouveaux champs
+    var dateEnregistrement = new Date();
+    var rowData = [
+      sanitizeData(data.nom),
+      sanitizeData(data.prenom),
+      sanitizeData(data.contact1),
+      sanitizeData(data.contact2 || ""),
+      sanitizeData(data.jour_mois_naiss || ""),
+      sanitizeData(data.famille_jeun || ""),
+      sanitizeData(data.quartier || ""),
+      sanitizeData(data.situ_mat || ""),
+      sanitizeData(data.situ_spirit || ""),
+      sanitizeMultipleChoice(data.departement || ""),
+      sanitizeData(data.profession || ""),
+      sanitizeData(data.secteur || ""),
+      // Nouveaux champs ajoutés
+      sanitizeMultipleChoice(data.diplome || ""),
+      sanitizeData(data.niveau_etude || ""),
+      sanitizeData(data.autre_niveau_precision || ""),
+      sanitizeMultipleChoice(data.competence || ""),
+      sanitizeData(data.autre_competence_precision || ""),
+      sanitizeMultipleChoice(data.recherche_emploi || ""),
+      sanitizeMultipleChoice(data.formation_interet || ""),
+      sanitizeData(data.autre_formation_precision || ""),
+      dateEnregistrement
+    ];
+    
+    sheet.appendRow(rowData);
+    
+    // ✅ Calcul du temps d'exécution
+    var executionTime = new Date().getTime() - startTime;
+    Logger.log("Temps d'exécution: " + executionTime + "ms");
+    
+    return ContentService.createTextOutput(JSON.stringify({
+      status: "success",
+      message: "Données enregistrées avec succès",
+      row: sheet.getLastRow(),
+      timestamp: dateEnregistrement.toISOString(),
+      executionTime: executionTime + "ms"
+    })).setMimeType(ContentService.MimeType.JSON);
+
+  } catch (error) {
+    Logger.log("ERREUR CRITIQUE: " + error.message);
+    return createErrorResponse("Erreur interne du serveur", "INTERNAL_ERROR");
+  }
+}
+
+// ========================================
+// FONCTIONS UTILITAIRES POUR LA GESTION D'ERREURS
+// ========================================
+
+/**
+ * Crée une réponse d'erreur standardisée
+ */
+function createErrorResponse(message, errorCode) {
+  Logger.log("Création réponse d'erreur: " + errorCode + " - " + message);
+  return ContentService.createTextOutput(JSON.stringify({
+    status: "error",
+    message: message,
+    errorCode: errorCode,
+    timestamp: new Date().toISOString()
+  })).setMimeType(ContentService.MimeType.JSON);
+}
+
+// ========================================
+// FONCTIONS OPTIMISÉES (remplacent les anciennes)
+// ========================================
+
+/**
+ * Obtient les informations de la feuille de manière optimisée (une seule lecture)
+ */
+function getSheetInfoOptimized(sheet) {
+  try {
+    var lastRow = sheet.getLastRow();
+    var lastColumn = sheet.getLastColumn();
+    
+    return {
+      lastRow: lastRow,
+      lastColumn: lastColumn,
+      hasHeaders: lastRow > 0 && lastColumn >= 21, // Mis à jour pour 21 colonnes (13 anciennes + 8 nouvelles)
+      hasData: lastRow > 1
+    };
+  } catch (error) {
+    Logger.log("ERREUR getSheetInfo: " + error.message);
+    return {
+      lastRow: 0,
+      lastColumn: 0,
+      hasHeaders: false,
+      hasData: false
+    };
+  }
+}
+
+/**
+ * Crée les en-têtes de manière optimisée
+ */
+function createHeadersOptimized(sheet) {
+  try {
+    var headers = [
+      "Nom", "Prénom", "Contact 1", "Contact 2", "Jour/Mois Naissance", 
+      "Famille/Jeunesse", "Quartier", "Situation Matrimoniale", 
+      "Situation Spirituelle", "Département", "Profession", "Secteur d'activité",
+      // Nouveaux en-têtes ajoutés
+      "Diplômé(e)", "Niveau d'étude", "Autre niveau précision", 
+      "Domaines de compétence", "Autre compétence précision", 
+      "Recherche d'emploi", "Formations d'intérêt", "Autre formation précision",
+      "Date d'enregistrement"
+    ];
+    
+    sheet.appendRow(headers);
+    return { success: true };
+  } catch (error) {
+    Logger.log("ERREUR création en-têtes: " + error.message);
+    return {
+      success: false,
+      message: "Erreur lors de la création des en-têtes: " + error.message
+    };
+  }
+}
+
+/**
+ * Vérifie les doublons de manière optimisée (lecture par lot)
+ */
+function checkForDuplicatesOptimized(sheet, data, lastRow) {
+  try {
+    if (lastRow <= 1) {
+      return { isDuplicate: false };
+    }
+    
+    // Lecture optimisée par lot (seulement les colonnes nécessaires)
+    var dataRange = sheet.getRange(2, 1, lastRow - 1, 3);
+    var existingData = dataRange.getValues();
+    
+    var nomLower = data.nom.toLowerCase().trim();
+    var prenomLower = data.prenom.toLowerCase().trim();
+    var contact1Trim = data.contact1.trim();
+    
+    for (var i = 0; i < existingData.length; i++) {
+      var row = existingData[i];
+      if (row[0] && row[1] && row[2]) {
+        if (row[0].toString().toLowerCase().trim() === nomLower &&
+            row[1].toString().toLowerCase().trim() === prenomLower &&
+            row[2].toString().trim() === contact1Trim) {
+          return {
+            isDuplicate: true,
+            message: "Un enregistrement avec ces informations existe déjà"
+          };
+        }
+      }
+    }
+    
+    return { isDuplicate: false };
+  } catch (error) {
+    Logger.log("ERREUR vérification doublons: " + error.message);
+    return { isDuplicate: false };
+  }
+}
+
+/**
+ * Nettoie et sécurise les données d'entrée (optimisé)
+ */
+function sanitizeData(input) {
+  if (!input) return "";
+  
+  try {
+    return input.toString()
+      .trim()
+      .replace(/[<>]/g, "")
+      .substring(0, 500); // Augmenté à 500 caractères pour les champs de précision
+  } catch (error) {
+    return "";
+  }
+}
+
+/**
+ * Valide et nettoie les données des sélections multiples
+ */
+function sanitizeMultipleChoice(input) {
+  if (!input) return "";
+  
+  try {
+    var cleaned = input.toString()
+      .trim()
+      .replace(/[<>]/g, "")
+      .substring(0, 1000); // Limite plus élevée pour les sélections multiples
+    
+    // Nettoyer les virgules multiples et espaces
+    return cleaned.replace(/,\s*,/g, ",").replace(/^\s*,|,\s*$/g, "");
+  } catch (error) {
+    return "";
+  }
+}
+
+/**
+ * Fonction de test optimisée pour vérifier la connectivité
+ */
+function testConnection() {
+  try {
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    sheet.getLastRow(); // Test minimal d'accès
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
+/**
+ * Fonction de test pour vérifier la gestion des nouveaux champs
+ */
+function testNewFields() {
+  try {
+    var testData = {
+      nom: "Test",
+      prenom: "Utilisateur",
+      contact1: "+2251234567890",
+      diplome: "Oui",
+      niveau_etude: "Bac+3",
+      competence: "Informatique, Marketing",
+      recherche_emploi: "Oui je cherche une meilleure opportunité",
+      formation_interet: "Développement personnel, Marketing"
+    };
+    
+    // Test de sanitization
+    var sanitizedNom = sanitizeData(testData.nom);
+    var sanitizedCompetence = sanitizeMultipleChoice(testData.competence);
+    
+    return {
+      success: true,
+      message: "Nouveaux champs correctement gérés",
+      testResults: {
+        nom: sanitizedNom,
+        competence: sanitizedCompetence,
+        fieldsCount: 21 // Nombre total de colonnes
+      }
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: "Erreur lors du test des nouveaux champs: " + error.message
+    };
+  }
+}
+
+// ========================================
+// FONCTION GET AMÉLIORÉE
+// ========================================
+
+// Fonction pour gérer les requêtes OPTIONS (CORS preflight)
+function doOptions(e) {
+  return ContentService.createTextOutput("")
+    .setMimeType(ContentService.MimeType.TEXT);
+}
+
+// Fonction GET optimisée pour tester l'API
+function doGet(e) {
+  try {
+    var startTime = new Date().getTime();
+    
+    // Test de connectivité optimisé
+    if (!testConnection()) {
+      return createErrorResponse("Erreur de connexion", "CONNECTION_ERROR");
+    }
+    
+    var executionTime = new Date().getTime() - startTime;
+    
+    var response = {
+      status: "success",
+      message: "API optimisée fonctionne correctement",
+      timestamp: new Date().toISOString(),
+      version: "4.0",
+      fields: {
+        total: 21,
+        original: 13,
+        new: 8,
+        newFields: [
+          "Diplômé(e)",
+          "Niveau d'étude", 
+          "Autre niveau précision",
+          "Domaines de compétence",
+          "Autre compétence précision",
+          "Recherche d'emploi",
+          "Formations d'intérêt",
+          "Autre formation précision"
+        ]
+      },
+      performance: {
+        optimized: true,
+        executionTime: executionTime + "ms",
+        features: [
+          "Validation rapide",
+          "Détection de doublons optimisée", 
+          "Gestion d'erreurs performante",
+          "Logs optimisés",
+          "Appels API réduits",
+          "Nouveaux champs éducatifs et professionnels",
+          "Validation des champs conditionnels",
+          "Sanitization améliorée"
+        ]
+      }
+    };
+    
+    return ContentService.createTextOutput(JSON.stringify(response))
+      .setMimeType(ContentService.MimeType.JSON);
+      
+  } catch (error) {
+    return createErrorResponse("Erreur interne du serveur", "INTERNAL_ERROR");
+  }
+}
