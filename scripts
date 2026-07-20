@@ -7,8 +7,8 @@ function doPost(e) {
       return createErrorResponse("Données manquantes", "MISSING_DATA");
     }
 
-    if (e.postData.contents.length > 10000) {
-      return createErrorResponse("Données trop volumineuses", "DATA_TOO_LARGE");
+    if (e.postData.contents.length > 8000000) {
+      return createErrorResponse("Données trop volumineuses (max 3 Mo pour l'image)", "DATA_TOO_LARGE");
     }
 
     var data;
@@ -45,6 +45,10 @@ function doPost(e) {
       return createErrorResponse("Informations du parent ou tuteur manquantes", "GUARDIAN_VALIDATION_ERROR");
     }
 
+    if (!data.preuve_paiement_base64?.trim()) {
+      return createErrorResponse("Capture d'écran du paiement manquante", "PAYMENT_PROOF_REQUIRED");
+    }
+
     var deadline = new Date("2026-09-30T00:00:00");
     if (new Date() >= deadline) {
       return createErrorResponse("Les pré-inscriptions sont closes", "DEADLINE_PASSED");
@@ -73,6 +77,17 @@ function doPost(e) {
       }
     }
 
+    var preuveUrl = savePaymentProof(
+      data.preuve_paiement_base64,
+      data.preuve_paiement_mime || "image/jpeg",
+      data.preuve_paiement_nom || "preuve_paiement.jpg",
+      sanitizeData(data.nom_prenoms)
+    );
+
+    if (!preuveUrl) {
+      return createErrorResponse("Erreur lors de l'enregistrement de la preuve de paiement", "PAYMENT_PROOF_SAVE_ERROR");
+    }
+
     var dateEnregistrement = new Date();
     var rowData = [
       sanitizeData(data.nom_prenoms),
@@ -83,6 +98,7 @@ function doPost(e) {
       sanitizeData(data.contact),
       sanitizeData(data.parent_tuteur),
       sanitizeData(data.contact_parent),
+      preuveUrl,
       dateEnregistrement
     ];
 
@@ -94,6 +110,7 @@ function doPost(e) {
     return ContentService.createTextOutput(JSON.stringify({
       status: "success",
       message: "Préinscription enregistrée avec succès",
+      preuveUrl: preuveUrl,
       row: sheet.getLastRow(),
       timestamp: dateEnregistrement.toISOString(),
       executionTime: executionTime + "ms"
@@ -103,6 +120,45 @@ function doPost(e) {
     Logger.log("ERREUR CRITIQUE: " + error.message);
     return createErrorResponse("Erreur interne du serveur", "INTERNAL_ERROR");
   }
+}
+
+function savePaymentProof(base64Data, mimeType, fileName, candidateName) {
+  try {
+    var allowedMimeTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+    if (allowedMimeTypes.indexOf(mimeType) === -1) {
+      mimeType = "image/jpeg";
+    }
+
+    var safeName = candidateName.replace(/[^a-zA-Z0-9\s\-_]/g, "").trim().replace(/\s+/g, "_");
+    if (!safeName) safeName = "candidat";
+    var timestamp = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "yyyyMMdd_HHmmss");
+    var extension = mimeType.indexOf("png") !== -1 ? "png" : (mimeType.indexOf("webp") !== -1 ? "webp" : "jpg");
+    var finalName = "Preuve_" + safeName + "_" + timestamp + "." + extension;
+
+    var folder = getOrCreateProofFolder();
+    var blob = Utilities.newBlob(Utilities.base64Decode(base64Data), mimeType, finalName);
+    var file = folder.createFile(blob);
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+
+    return file.getUrl();
+  } catch (error) {
+    Logger.log("ERREUR savePaymentProof: " + error.message);
+    return "";
+  }
+}
+
+function getOrCreateProofFolder() {
+  var folderName = "Preuves_Paiement_CRA_Abidjan1";
+  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var parentFolders = DriveApp.getFileById(spreadsheet.getId()).getParents();
+  var parentFolder = parentFolders.hasNext() ? parentFolders.next() : DriveApp.getRootFolder();
+
+  var folders = parentFolder.getFoldersByName(folderName);
+  if (folders.hasNext()) {
+    return folders.next();
+  }
+
+  return parentFolder.createFolder(folderName);
 }
 
 function validateMinimumAge(dateString, minAge) {
@@ -138,7 +194,7 @@ function getSheetInfoOptimized(sheet) {
     return {
       lastRow: lastRow,
       lastColumn: lastColumn,
-      hasHeaders: lastRow > 0 && lastColumn >= 9,
+      hasHeaders: lastRow > 0 && lastColumn >= 10,
       hasData: lastRow > 1
     };
   } catch (error) {
@@ -163,6 +219,7 @@ function createHeadersOptimized(sheet) {
       "Contact",
       "Parent ou tuteur",
       "Contact parent/tuteur",
+      "Preuve de paiement",
       "Date d'enregistrement"
     ];
 
@@ -251,11 +308,11 @@ function doGet(e) {
       status: "success",
       message: "API préinscription arbitres CRA Abidjan 1",
       timestamp: new Date().toISOString(),
-      version: "2.0",
+      version: "3.0",
       zone: "Abidjan 1 — Adjamé, Cocody, Abobo",
       deadline: "2026-09-30T00:00:00",
       fields: {
-        total: 9,
+        total: 10,
         columns: [
           "Nom et prénoms",
           "Date de naissance",
@@ -265,6 +322,7 @@ function doGet(e) {
           "Contact",
           "Parent ou tuteur",
           "Contact parent/tuteur",
+          "Preuve de paiement",
           "Date d'enregistrement"
         ]
       },

@@ -196,6 +196,37 @@
             font-weight: 600;
         }
 
+        .fee-box small {
+            display: block;
+            margin-top: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #c2410c;
+        }
+
+        .payment-section {
+            background: #fff;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 14px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            text-align: center;
+        }
+
+        .payment-section h2 {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .payment-section p {
+            font-size: 13px;
+            color: #64748b;
+            line-height: 1.5;
+            margin-bottom: 14px;
+        }
+
         .contacts-box {
             background: #1e293b;
             border-radius: 12px;
@@ -372,6 +403,115 @@
             background: #1ebe5d;
         }
 
+        .wave-btn {
+            display: inline-block;
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #1ba3e0, #0077b6);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            box-shadow: 0 4px 14px rgba(27, 163, 224, 0.35);
+        }
+
+        .wave-btn:hover {
+            background: linear-gradient(135deg, #1590c9, #006699);
+        }
+
+        .next-steps {
+            display: none;
+            margin-top: 14px;
+            padding: 14px 16px;
+            background: #eff6ff;
+            border: 1px solid #93c5fd;
+            border-radius: 12px;
+            font-size: 13px;
+            color: #1e40af;
+            line-height: 1.6;
+        }
+
+        .next-steps.visible {
+            display: block;
+        }
+
+        .next-steps ol {
+            margin: 10px 0 0 18px;
+            padding: 0;
+        }
+
+        .next-steps li {
+            margin-bottom: 6px;
+        }
+
+        .next-steps strong {
+            color: #1d4ed8;
+        }
+
+        .file-upload {
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 20px 16px;
+            text-align: center;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .file-upload:hover,
+        .file-upload.dragover {
+            border-color: #1ba3e0;
+            background: #eff6ff;
+        }
+
+        .file-upload input[type="file"] {
+            display: none;
+        }
+
+        .file-upload-label {
+            display: block;
+            font-size: 14px;
+            color: #475569;
+            cursor: pointer;
+            line-height: 1.5;
+        }
+
+        .file-upload-label strong {
+            color: #0077b6;
+        }
+
+        .file-preview {
+            display: none;
+            margin-top: 14px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        .file-preview.visible {
+            display: block;
+        }
+
+        .file-preview img {
+            width: 100%;
+            max-height: 220px;
+            object-fit: contain;
+            background: #000;
+            display: block;
+        }
+
+        .file-preview-name {
+            padding: 8px 12px;
+            font-size: 12px;
+            color: #64748b;
+            background: #f1f5f9;
+            text-align: center;
+        }
+
         .whatsapp-note {
             display: none;
             margin-top: 12px;
@@ -504,6 +644,15 @@
             💰 Pré-inscription en ligne : <strong>2 000 F CFA</strong>
         </div>
 
+        <section class="payment-section">
+            <h2>💳 Paiement Wave</h2>
+            <p>Étape 1 : paie ta pré-inscription de <strong>2 000 F CFA</strong> via Wave.<br>
+            Étape 2 : joins la capture d'écran du paiement dans le formulaire ci-dessous.</p>
+            <a id="wave-btn" class="wave-btn" href="https://pay.wave.com/m/VOTRE_LIEN_WAVE" target="_blank" rel="noopener noreferrer">
+                Payer 2 000 F CFA via Wave
+            </a>
+        </section>
+
         <div class="contacts-box">
             <p>📞 Infoline — CRA Abidjan 1</p>
             <a href="tel:+2250707132253">+225 07 07 13 22 53</a>
@@ -583,6 +732,30 @@
                 </div>
             </section>
 
+            <section class="card">
+                <div class="card-header">
+                    <span class="card-icon">🧾</span>
+                    <h3>Preuve de paiement Wave</h3>
+                </div>
+                <p class="card-subtitle">Après avoir payé via Wave, joins ici la capture d'écran confirmant le paiement de 2 000 F CFA.</p>
+
+                <div class="form-group">
+                    <label for="preuve_paiement">Capture d'écran du paiement <span class="required">*</span></label>
+                    <div class="file-upload" id="file-upload-zone">
+                        <label class="file-upload-label" for="preuve_paiement">
+                            📷 Clique pour choisir une image<br>
+                            <strong>JPG, PNG ou WEBP — max 3 Mo</strong>
+                        </label>
+                        <input type="file" id="preuve_paiement" accept="image/jpeg,image/png,image/webp,image/jpg" required>
+                    </div>
+                    <span class="error-message" id="preuve-error">Veuillez joindre la capture d'écran de votre paiement Wave.</span>
+                    <div id="file-preview" class="file-preview">
+                        <img id="preview-image" src="" alt="Aperçu de la preuve de paiement">
+                        <p id="preview-name" class="file-preview-name"></p>
+                    </div>
+                </div>
+            </section>
+
             <button type="submit" class="submit-btn">
                 Envoyer ma pré-inscription
                 <div class="spinner"></div>
@@ -590,9 +763,13 @@
 
             <p id="message" class="message"></p>
 
-            <p id="whatsapp-note" class="whatsapp-note">
-                Étape suivante : rejoins le groupe WhatsApp pour finaliser ta pré-inscription et régler les <strong>2 000 F CFA</strong>.
-            </p>
+            <div id="next-steps" class="next-steps">
+                <strong>Dernière étape :</strong>
+                <ol>
+                    <li>Vérifie que ta capture d'écran du paiement Wave a bien été envoyée</li>
+                    <li>Rejoins le groupe WhatsApp pour le suivi de ta candidature</li>
+                </ol>
+            </div>
 
             <a id="whatsapp-btn" class="whatsapp-btn" href="#" target="_blank" rel="noopener noreferrer">
                 📲 Rejoindre le groupe WhatsApp
@@ -605,10 +782,103 @@
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/VOTRE_ID_SCRIPT/exec";
         const WHATSAPP_GROUP_URL = "https://chat.whatsapp.com/VOTRE_LIEN_GROUPE";
+        const WAVE_PAYMENT_URL = "https://pay.wave.com/m/VOTRE_LIEN_WAVE";
+        const PREINSCRIPTION_AMOUNT = "2 000 F CFA";
+        const MAX_IMAGE_SIZE = 3 * 1024 * 1024;
         const DEADLINE = new Date("2026-09-30T00:00:00");
 
         const whatsappBtn = document.getElementById("whatsapp-btn");
+        const nextSteps = document.getElementById("next-steps");
+        const preuveInput = document.getElementById("preuve_paiement");
+        const fileUploadZone = document.getElementById("file-upload-zone");
+        const filePreview = document.getElementById("file-preview");
+        const previewImage = document.getElementById("preview-image");
+        const previewName = document.getElementById("preview-name");
         whatsappBtn.href = WHATSAPP_GROUP_URL;
+        document.getElementById("wave-btn").href = WAVE_PAYMENT_URL;
+
+        function readImageAsBase64(file) {
+            return new Promise(function (resolve, reject) {
+                const reader = new FileReader();
+                reader.onload = function () {
+                    const parts = reader.result.split(",");
+                    resolve({
+                        base64: parts[1],
+                        mimeType: file.type,
+                        fileName: file.name
+                    });
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function validatePaymentProof(file) {
+            const errorElement = document.getElementById("preuve-error");
+
+            if (!file) {
+                errorElement.textContent = "Veuillez joindre la capture d'écran de votre paiement Wave.";
+                errorElement.style.display = "block";
+                return false;
+            }
+
+            if (!file.type.startsWith("image/")) {
+                errorElement.textContent = "Le fichier doit être une image (JPG, PNG ou WEBP).";
+                errorElement.style.display = "block";
+                return false;
+            }
+
+            if (file.size > MAX_IMAGE_SIZE) {
+                errorElement.textContent = "L'image est trop lourde. Taille maximum : 3 Mo.";
+                errorElement.style.display = "block";
+                return false;
+            }
+
+            errorElement.style.display = "none";
+            return true;
+        }
+
+        function showImagePreview(file) {
+            const reader = new FileReader();
+            reader.onload = function () {
+                previewImage.src = reader.result;
+                previewName.textContent = file.name;
+                filePreview.classList.add("visible");
+            };
+            reader.readAsDataURL(file);
+        }
+
+        preuveInput.addEventListener("change", function () {
+            const file = this.files[0];
+            if (file && validatePaymentProof(file)) {
+                showImagePreview(file);
+            } else {
+                filePreview.classList.remove("visible");
+                previewImage.src = "";
+                previewName.textContent = "";
+            }
+        });
+
+        fileUploadZone.addEventListener("dragover", function (event) {
+            event.preventDefault();
+            fileUploadZone.classList.add("dragover");
+        });
+
+        fileUploadZone.addEventListener("dragleave", function () {
+            fileUploadZone.classList.remove("dragover");
+        });
+
+        fileUploadZone.addEventListener("drop", function (event) {
+            event.preventDefault();
+            fileUploadZone.classList.remove("dragover");
+            const file = event.dataTransfer.files[0];
+            if (file) {
+                preuveInput.files = event.dataTransfer.files;
+                if (validatePaymentProof(file)) {
+                    showImagePreview(file);
+                }
+            }
+        });
 
         function normalizePhone(input) {
             let value = input.value.replace(/\s/g, "");
@@ -673,14 +943,13 @@
 
             const submitButton = this.querySelector('button[type="submit"]');
             const message = document.getElementById("message");
-            const whatsappNote = document.getElementById("whatsapp-note");
 
             submitButton.disabled = true;
             submitButton.classList.add("loading");
             message.className = "message";
             message.style.display = "none";
             whatsappBtn.classList.remove("visible");
-            whatsappNote.classList.remove("visible");
+            nextSteps.classList.remove("visible");
 
             if (!isBeforeDeadline()) {
                 message.textContent = "❌ Les pré-inscriptions sont closes depuis le 30 septembre 2026.";
@@ -700,9 +969,10 @@
             const parent_tuteur = document.getElementById("parent_tuteur").value.trim();
             const contactParentInput = document.getElementById("contact_parent");
             const contact_parent = normalizePhone(contactParentInput);
+            const preuveFile = preuveInput.files[0];
 
-            if (!nom_prenoms || !date_naissance || !lieu_naissance || !profession || !commune || !contact || !parent_tuteur || !contact_parent) {
-                message.textContent = "❌ Veuillez remplir tous les champs obligatoires.";
+            if (!nom_prenoms || !date_naissance || !lieu_naissance || !profession || !commune || !contact || !parent_tuteur || !contact_parent || !preuveFile) {
+                message.textContent = "❌ Veuillez remplir tous les champs obligatoires, y compris la capture d'écran du paiement.";
                 message.className = "message error";
                 submitButton.disabled = false;
                 submitButton.classList.remove("loading");
@@ -711,8 +981,20 @@
 
             if (!validateAge(date_naissance) || !validateCommune(commune) ||
                 !validatePhone(contactInput, "contact-error") ||
-                !validatePhone(contactParentInput, "contact-parent-error")) {
-                message.textContent = "❌ Vérifiez vos informations (âge, commune ou contacts).";
+                !validatePhone(contactParentInput, "contact-parent-error") ||
+                !validatePaymentProof(preuveFile)) {
+                message.textContent = "❌ Vérifiez vos informations (âge, commune, contacts ou preuve de paiement).";
+                message.className = "message error";
+                submitButton.disabled = false;
+                submitButton.classList.remove("loading");
+                return;
+            }
+
+            let preuveData;
+            try {
+                preuveData = await readImageAsBase64(preuveFile);
+            } catch (error) {
+                message.textContent = "❌ Impossible de lire l'image. Réessayez avec une autre capture.";
                 message.className = "message error";
                 submitButton.disabled = false;
                 submitButton.classList.remove("loading");
@@ -727,7 +1009,10 @@
                 commune,
                 contact,
                 parent_tuteur,
-                contact_parent
+                contact_parent,
+                preuve_paiement_base64: preuveData.base64,
+                preuve_paiement_mime: preuveData.mimeType,
+                preuve_paiement_nom: preuveData.fileName
             };
 
             try {
@@ -738,17 +1023,23 @@
                     body: JSON.stringify(data)
                 });
 
-                message.textContent = "✅ Pré-inscription enregistrée avec succès !";
+                message.textContent = "✅ Pré-inscription et preuve de paiement enregistrées ! Rejoins WhatsApp pour le suivi.";
                 message.className = "message success";
-                whatsappNote.classList.add("visible");
+                nextSteps.classList.add("visible");
                 whatsappBtn.classList.add("visible");
                 document.getElementById("form").reset();
+                filePreview.classList.remove("visible");
+                previewImage.src = "";
+                previewName.textContent = "";
             } catch (error) {
-                message.textContent = "✅ Pré-inscription envoyée. Rejoins le groupe WhatsApp pour finaliser.";
+                message.textContent = "✅ Pré-inscription envoyée avec ta preuve de paiement.";
                 message.className = "message success";
-                whatsappNote.classList.add("visible");
+                nextSteps.classList.add("visible");
                 whatsappBtn.classList.add("visible");
                 document.getElementById("form").reset();
+                filePreview.classList.remove("visible");
+                previewImage.src = "";
+                previewName.textContent = "";
             } finally {
                 submitButton.disabled = false;
                 submitButton.classList.remove("loading");
