@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Préinscription Élèves Arbitres — CRA Abidjan 1</title>
+    <title>Recrutement Élèves Arbitres — CRA Abidjan 1</title>
     <style>
         * {
             box-sizing: border-box;
@@ -21,10 +21,10 @@
 
         .hero {
             position: relative;
-            background: linear-gradient(rgba(15, 23, 42, 0.82), rgba(15, 23, 42, 0.92)),
-                url("WhatsApp Image 2026-072.25.03.jpeg") center/cover no-repeat;
+            background: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.93)),
+                url("img3.jpeg") center/cover no-repeat;
             color: #fff;
-            padding: 32px 20px 40px;
+            padding: 32px 20px 36px;
             text-align: center;
         }
 
@@ -32,56 +32,69 @@
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
         .hero-badge img {
-            width: 48px;
-            height: 48px;
+            width: 52px;
+            height: 52px;
             border-radius: 50%;
             object-fit: cover;
+            object-position: center top;
             border: 2px solid #f59e0b;
         }
 
         .hero-badge span {
             font-weight: 700;
-            font-size: 15px;
+            font-size: 14px;
             letter-spacing: 0.5px;
+            text-align: left;
+            line-height: 1.3;
         }
 
-        .hero-label {
+        .hero-org {
+            font-size: 12px;
             color: #f59e0b;
-            font-size: 13px;
             font-weight: 700;
-            letter-spacing: 2px;
+            letter-spacing: 1.5px;
             text-transform: uppercase;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .hero h1 {
-            font-size: clamp(28px, 8vw, 42px);
+            font-size: clamp(22px, 6vw, 32px);
             font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 6px;
+            line-height: 1.2;
+            margin-bottom: 14px;
         }
 
         .hero h1 .accent {
             color: #f59e0b;
         }
 
-        .hero p {
-            font-size: 15px;
-            line-height: 1.5;
-            opacity: 0.9;
-            max-width: 420px;
-            margin: 16px auto 0;
+        .hero-intro {
+            font-size: 14px;
+            line-height: 1.6;
+            opacity: 0.92;
+            max-width: 460px;
+            margin: 0 auto;
+            text-align: left;
         }
 
-        .hero-contacts {
-            margin-top: 18px;
-            font-size: 14px;
-            color: #f59e0b;
+        .hero-intro p {
+            margin-bottom: 10px;
+        }
+
+        .hero-zones {
+            display: inline-block;
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 13px;
+            color: #fbbf24;
             font-weight: 600;
+            margin-top: 4px;
         }
 
         .container {
@@ -90,30 +103,144 @@
             padding: 0 16px 40px;
         }
 
-        .info-box {
-            background: #fff7ed;
-            border: 1px solid #fdba74;
-            border-radius: 12px;
-            padding: 14px 16px;
-            margin: -20px auto 20px;
+        .banner-image {
+            width: 100%;
             max-width: 520px;
-            position: relative;
-            z-index: 1;
-            font-size: 14px;
-            line-height: 1.5;
-            color: #9a3412;
+            margin: 0 auto 16px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
         }
 
-        .info-box strong {
-            color: #c2410c;
+        .banner-image img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            object-position: center 30%;
+            display: block;
+        }
+
+        .banner-caption {
+            background: #1e293b;
+            color: #f59e0b;
+            text-align: center;
+            padding: 10px 16px;
+            font-size: 13px;
+            font-weight: 600;
         }
 
         .card {
             background: #fff;
             border-radius: 16px;
-            padding: 24px 20px;
-            margin-bottom: 16px;
+            padding: 22px 20px;
+            margin-bottom: 14px;
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .card h2 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .card ul li {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #475569;
+            padding: 6px 0 6px 20px;
+            position: relative;
+        }
+
+        .card ul li::before {
+            content: "•";
+            position: absolute;
+            left: 4px;
+            color: #f59e0b;
+            font-weight: bold;
+        }
+
+        .deadline-box {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 14px;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #991b1b;
+        }
+
+        .deadline-box strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .fee-box {
+            background: #fff7ed;
+            border: 1px solid #fdba74;
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 14px;
+            font-size: 14px;
+            color: #9a3412;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .contacts-box {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .contacts-box p {
+            color: #94a3b8;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .contacts-box a {
+            display: block;
+            color: #f59e0b;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 4px 0;
+        }
+
+        .contacts-box a:hover {
+            text-decoration: underline;
+        }
+
+        .form-title {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .form-title h2 {
+            font-size: 20px;
+            font-weight: 800;
+            color: #1e293b;
+            letter-spacing: 1px;
+        }
+
+        .form-title p {
+            font-size: 13px;
+            color: #64748b;
+            margin-top: 6px;
         }
 
         .card-header {
@@ -124,12 +251,12 @@
         }
 
         .card-icon {
-            font-size: 22px;
+            font-size: 20px;
             line-height: 1;
         }
 
-        .card h2 {
-            font-size: 18px;
+        .card h3 {
+            font-size: 17px;
             font-weight: 700;
             color: #1e293b;
         }
@@ -137,19 +264,13 @@
         .card-subtitle {
             font-size: 13px;
             color: #64748b;
-            margin-bottom: 20px;
-            padding-left: 32px;
+            margin-bottom: 18px;
+            padding-left: 30px;
         }
 
         .form-group {
-            margin-bottom: 18px;
+            margin-bottom: 16px;
             position: relative;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
         }
 
         label {
@@ -195,23 +316,6 @@
             color: #94a3b8;
         }
 
-        .input-with-unit {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .input-with-unit input {
-            flex: 1;
-        }
-
-        .input-with-unit .unit {
-            font-size: 14px;
-            font-weight: 600;
-            color: #64748b;
-            min-width: 28px;
-        }
-
         .error-message {
             color: #dc2626;
             font-size: 13px;
@@ -232,21 +336,57 @@
             transition: transform 0.1s, opacity 0.2s;
             box-shadow: 0 4px 14px rgba(234, 88, 12, 0.35);
             position: relative;
-            margin-top: 8px;
+            margin-top: 4px;
         }
 
-        .submit-btn:hover {
-            opacity: 0.95;
-        }
-
-        .submit-btn:active {
-            transform: scale(0.98);
-        }
-
+        .submit-btn:hover { opacity: 0.95; }
+        .submit-btn:active { transform: scale(0.98); }
         .submit-btn:disabled {
             background: #cbd5e1;
             cursor: not-allowed;
             box-shadow: none;
+        }
+
+        .whatsapp-btn {
+            display: none;
+            width: 100%;
+            padding: 16px;
+            background: #25d366;
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            margin-top: 12px;
+            box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
+        }
+
+        .whatsapp-btn.visible {
+            display: block;
+        }
+
+        .whatsapp-btn:hover {
+            background: #1ebe5d;
+        }
+
+        .whatsapp-note {
+            display: none;
+            margin-top: 12px;
+            padding: 12px 14px;
+            background: #ecfdf5;
+            border: 1px solid #86efac;
+            border-radius: 10px;
+            font-size: 13px;
+            color: #166534;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        .whatsapp-note.visible {
+            display: block;
         }
 
         .spinner {
@@ -267,16 +407,11 @@
             to { transform: translateY(-50%) rotate(360deg); }
         }
 
-        .submit-btn.loading {
-            padding-right: 48px;
-        }
-
-        .submit-btn.loading .spinner {
-            display: block;
-        }
+        .submit-btn.loading { padding-right: 48px; }
+        .submit-btn.loading .spinner { display: block; }
 
         .message {
-            margin-top: 16px;
+            margin-top: 14px;
             padding: 12px 16px;
             border-radius: 10px;
             font-size: 14px;
@@ -317,127 +452,151 @@
             vertical-align: middle;
             margin: 0 10px;
         }
-
-        @media (max-width: 480px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-        }
     </style>
 </head>
 
 <body>
     <header class="hero">
         <div class="hero-badge">
-            <img src="WhatsApp Image 202-185.03.jpeg" alt="CRA Abidjan 1">
-            <span>CRA Abidjan 1</span>
+            <img src="img1.jpeg" alt="CRA Abidjan 1">
+            <span>Commission Régionale<br>des Arbitres (CRA)<br>Abidjan 1</span>
         </div>
-        <p class="hero-label">Préinscription</p>
-        <h1>ÉLÈVES<br><span class="accent">ARBITRES</span></h1>
-        <p>Rejoins le corps arbitral. Remplis le formulaire ci-dessous pour déposer ta candidature à la formation.</p>
-        <p class="hero-contacts">📞 0778460525 · 0778697961 · 0504071013</p>
+        <p class="hero-org">Recrutement d'arbitre de football</p>
+        <h1>CAMPAGNE DE <span class="accent">RECRUTEMENT</span><br>ET DE FORMATION<br>D'ÉLÈVES ARBITRES</h1>
+        <div class="hero-intro">
+            <p>Vous rêvez de fouler les pelouses, de diriger le jeu et de devenir un arbitre d'élite ? C'est le moment de saisir votre chance !</p>
+            <p>Si vous résidez à Abidjan, précisément dans les communes d'<strong>Abobo</strong>, d'<strong>Adjamé</strong> ou de <strong>Cocody</strong>, vous pouvez vous inscrire et bénéficier de cette formation.</p>
+            <span class="hero-zones">📍 Abidjan 1 — Adjamé · Cocody · Abobo</span>
+        </div>
     </header>
 
     <div class="container">
-        <div class="info-box">
-            Les champs marqués <strong>*</strong> sont obligatoires. Vérifie bien tes informations avant l'envoi : elles serviront pour ton dossier d'arbitre.
+        <figure class="banner-image">
+            <img src="img2.jpeg" alt="Équipe d'arbitres CRA Abidjan 1">
+            <figcaption class="banner-caption">Deviens arbitre d'élite avec la CRA Abidjan 1</figcaption>
+        </figure>
+
+        <section class="card">
+            <h2>✅ Conditions d'admission</h2>
+            <ul>
+                <li>Âge minimum : <strong>16 ans révolus</strong></li>
+                <li>Niveau d'études requis : <strong>Classe de 5ème minimum</strong></li>
+                <li>Être apte à la pratique du sport</li>
+            </ul>
+        </section>
+
+        <section class="card">
+            <h2>📁 Dossier de candidature</h2>
+            <ul>
+                <li>Une (01) photocopie de votre Carte Nationale d'Identité (CNI) ou pièce d'identité en cours de validité</li>
+                <li>Une (01) photocopie de la CNI du parent ou du tuteur légal (pour les mineurs)</li>
+                <li>Quatre (04) photos d'identité récentes et en couleur</li>
+                <li>Les frais d'inscription fixés à <strong>10 000 F CFA</strong> (payables dès le dépôt du dossier)</li>
+            </ul>
+        </section>
+
+        <div class="deadline-box">
+            <strong>⏰ Clôture des pré-inscriptions</strong>
+            Mercredi 30 septembre 2026 à 00h 00 min
+        </div>
+
+        <div class="fee-box">
+            💰 Pré-inscription en ligne : <strong>2 000 F CFA</strong>
+        </div>
+
+        <div class="contacts-box">
+            <p>📞 Infoline — CRA Abidjan 1</p>
+            <a href="tel:+2250707132253">+225 07 07 13 22 53</a>
+            <a href="tel:+2250504071013">+225 05 04 07 10 13</a>
+            <a href="tel:+2250777254186">+225 07 77 25 41 86</a>
+            <a href="tel:+2250747244374">+225 07 47 24 43 74</a>
+        </div>
+
+        <div class="form-title">
+            <h2>PRÉ-INSCRIPTIONS</h2>
+            <p>Les champs marqués <strong style="color:#dc2626">*</strong> sont obligatoires</p>
         </div>
 
         <form id="form">
             <section class="card">
                 <div class="card-header">
                     <span class="card-icon">📋</span>
-                    <h2>Identité du candidat</h2>
+                    <h3>Informations du candidat</h3>
                 </div>
                 <p class="card-subtitle">Renseigne tes informations exactement comme sur ta pièce d'identité.</p>
 
                 <div class="form-group">
-                    <label for="nom">Nom <span class="required">*</span></label>
-                    <input type="text" id="nom" placeholder="KOUASSI" required>
+                    <label for="nom_prenoms">Nom et prénoms <span class="required">*</span></label>
+                    <input type="text" id="nom_prenoms" placeholder="KOUASSI Yves Olivier" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="prenom">Prénoms <span class="required">*</span></label>
-                    <input type="text" id="prenom" placeholder="Yves Olivier" required>
+                    <label for="date_naissance">Date de naissance <span class="required">*</span></label>
+                    <input type="date" id="date_naissance" required max="2010-09-30">
+                    <span class="error-message" id="age-error">Vous devez avoir au moins 16 ans révolus.</span>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="sexe">Sexe <span class="required">*</span></label>
-                        <select id="sexe" required>
-                            <option value="">— Choisir —</option>
-                            <option value="Masculin">Masculin</option>
-                            <option value="Féminin">Féminin</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="date_naissance">Date de naissance <span class="required">*</span></label>
-                        <input type="date" id="date_naissance" required>
-                    </div>
+                <div class="form-group">
+                    <label for="lieu_naissance">Lieu de naissance <span class="required">*</span></label>
+                    <input type="text" id="lieu_naissance" placeholder="Abidjan, Bouaké, Yamoussoukro..." required>
                 </div>
 
                 <div class="form-group">
                     <label for="profession">Profession <span class="required">*</span></label>
                     <input type="text" id="profession" placeholder="Étudiant, Enseignant, Commerçant..." required>
                 </div>
-            </section>
 
-            <section class="card">
-                <div class="card-header">
-                    <span class="card-icon">📏</span>
-                    <h2>Données physiques</h2>
+                <div class="form-group">
+                    <label for="commune">Commune <span class="required">*</span></label>
+                    <select id="commune" required>
+                        <option value="">— Choisir votre commune —</option>
+                        <option value="Abobo">Abobo</option>
+                        <option value="Adjamé">Adjamé</option>
+                        <option value="Cocody">Cocody</option>
+                    </select>
+                    <span class="error-message" id="commune-error">Seules les communes Abobo, Adjamé et Cocody sont éligibles.</span>
                 </div>
-                <p class="card-subtitle">Utiles pour la dotation des tenues d'arbitrage.</p>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="taille">Taille <span class="required">*</span></label>
-                        <div class="input-with-unit">
-                            <input type="number" id="taille" placeholder="175" min="140" max="220" required>
-                            <span class="unit">cm</span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="poids">Poids <span class="required">*</span></label>
-                        <div class="input-with-unit">
-                            <input type="number" id="poids" placeholder="68" min="40" max="150" required>
-                            <span class="unit">kg</span>
-                        </div>
-                    </div>
+                <div class="form-group">
+                    <label for="contact">Contact <span class="required">*</span></label>
+                    <input type="tel" id="contact" placeholder="07 00 00 00 00" required>
+                    <span class="error-message" id="contact-error">Format invalide (ex: 0700000000 ou +2250700000000)</span>
                 </div>
             </section>
 
             <section class="card">
                 <div class="card-header">
-                    <span class="card-icon">📍</span>
-                    <h2>Coordonnées</h2>
+                    <span class="card-icon">👨‍👩‍👦</span>
+                    <h3>Parent ou tuteur</h3>
                 </div>
-                <p class="card-subtitle">Pour te contacter et te situer.</p>
+                <p class="card-subtitle">Obligatoire pour les candidats mineurs.</p>
 
                 <div class="form-group">
-                    <label for="adresse">Adresse géographique <span class="required">*</span></label>
-                    <input type="text" id="adresse" placeholder="Commune, quartier, repère (ex: Yopougon, Sicogi)" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="telephone">Téléphone <span class="required">*</span></label>
-                    <input type="tel" id="telephone" placeholder="07 00 00 00 00" required pattern="^(\+225|0)[0-9]{9,10}$">
-                    <span class="error-message" id="telephone-error">Format invalide (ex: 0700000000 ou +2250700000000)</span>
+                    <label for="parent_tuteur">Parent ou tuteur <span class="required">*</span></label>
+                    <input type="text" id="parent_tuteur" placeholder="Nom et prénoms du parent ou tuteur" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="email">Email <span class="required">*</span></label>
-                    <input type="email" id="email" placeholder="exemple@mail.com" required>
-                    <span class="error-message" id="email-error">Adresse email invalide</span>
+                    <label for="contact_parent">Contact <span class="required">*</span></label>
+                    <input type="tel" id="contact_parent" placeholder="07 00 00 00 00" required>
+                    <span class="error-message" id="contact-parent-error">Format invalide (ex: 0700000000 ou +2250700000000)</span>
                 </div>
             </section>
 
             <button type="submit" class="submit-btn">
-                Envoyer ma préinscription
+                Envoyer ma pré-inscription
                 <div class="spinner"></div>
             </button>
 
             <p id="message" class="message"></p>
+
+            <p id="whatsapp-note" class="whatsapp-note">
+                Étape suivante : rejoins le groupe WhatsApp pour finaliser ta pré-inscription et régler les <strong>2 000 F CFA</strong>.
+            </p>
+
+            <a id="whatsapp-btn" class="whatsapp-btn" href="#" target="_blank" rel="noopener noreferrer">
+                📲 Rejoindre le groupe WhatsApp
+            </a>
         </form>
     </div>
 
@@ -445,6 +604,11 @@
 
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/VOTRE_ID_SCRIPT/exec";
+        const WHATSAPP_GROUP_URL = "https://chat.whatsapp.com/VOTRE_LIEN_GROUPE";
+        const DEADLINE = new Date("2026-09-30T00:00:00");
+
+        const whatsappBtn = document.getElementById("whatsapp-btn");
+        whatsappBtn.href = WHATSAPP_GROUP_URL;
 
         function normalizePhone(input) {
             let value = input.value.replace(/\s/g, "");
@@ -454,10 +618,9 @@
             return value;
         }
 
-        function validatePhone(input) {
-            const normalized = normalizePhone(input);
+        function validatePhone(input, errorId) {
             const isValid = /^(\+225[0-9]{10}|0[0-9]{9})$/.test(input.value.replace(/\s/g, ""));
-            const errorElement = document.getElementById("telephone-error");
+            const errorElement = document.getElementById(errorId);
 
             if (!isValid) {
                 errorElement.style.display = "block";
@@ -469,26 +632,40 @@
             return isValid;
         }
 
-        function validateEmail(input) {
-            const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value.trim());
-            const errorElement = document.getElementById("email-error");
-
-            if (!isValid) {
-                errorElement.style.display = "block";
-                input.setCustomValidity("Email invalide");
-            } else {
-                errorElement.style.display = "none";
-                input.setCustomValidity("");
+        function validateAge(dateValue) {
+            const birthDate = new Date(dateValue);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
             }
+            const isValid = age >= 16;
+            document.getElementById("age-error").style.display = isValid ? "none" : "block";
             return isValid;
         }
 
-        document.getElementById("telephone").addEventListener("input", function () {
-            validatePhone(this);
+        function validateCommune(value) {
+            const allowed = ["Abobo", "Adjamé", "Cocody"];
+            const isValid = allowed.includes(value);
+            document.getElementById("commune-error").style.display = isValid ? "none" : "block";
+            return isValid;
+        }
+
+        function isBeforeDeadline() {
+            return new Date() < DEADLINE;
+        }
+
+        document.getElementById("contact").addEventListener("input", function () {
+            validatePhone(this, "contact-error");
         });
 
-        document.getElementById("email").addEventListener("input", function () {
-            validateEmail(this);
+        document.getElementById("contact_parent").addEventListener("input", function () {
+            validatePhone(this, "contact-parent-error");
+        });
+
+        document.getElementById("date_naissance").addEventListener("change", function () {
+            if (this.value) validateAge(this.value);
         });
 
         document.getElementById("form").addEventListener("submit", async function (event) {
@@ -496,25 +673,35 @@
 
             const submitButton = this.querySelector('button[type="submit"]');
             const message = document.getElementById("message");
+            const whatsappNote = document.getElementById("whatsapp-note");
 
             submitButton.disabled = true;
             submitButton.classList.add("loading");
             message.className = "message";
             message.style.display = "none";
+            whatsappBtn.classList.remove("visible");
+            whatsappNote.classList.remove("visible");
 
-            const nom = document.getElementById("nom").value.trim();
-            const prenom = document.getElementById("prenom").value.trim();
-            const sexe = document.getElementById("sexe").value;
+            if (!isBeforeDeadline()) {
+                message.textContent = "❌ Les pré-inscriptions sont closes depuis le 30 septembre 2026.";
+                message.className = "message error";
+                submitButton.disabled = false;
+                submitButton.classList.remove("loading");
+                return;
+            }
+
+            const nom_prenoms = document.getElementById("nom_prenoms").value.trim();
             const date_naissance = document.getElementById("date_naissance").value;
+            const lieu_naissance = document.getElementById("lieu_naissance").value.trim();
             const profession = document.getElementById("profession").value.trim();
-            const taille = document.getElementById("taille").value.trim();
-            const poids = document.getElementById("poids").value.trim();
-            const adresse = document.getElementById("adresse").value.trim();
-            const telephoneInput = document.getElementById("telephone");
-            const telephone = normalizePhone(telephoneInput);
-            const email = document.getElementById("email").value.trim();
+            const commune = document.getElementById("commune").value;
+            const contactInput = document.getElementById("contact");
+            const contact = normalizePhone(contactInput);
+            const parent_tuteur = document.getElementById("parent_tuteur").value.trim();
+            const contactParentInput = document.getElementById("contact_parent");
+            const contact_parent = normalizePhone(contactParentInput);
 
-            if (!nom || !prenom || !sexe || !date_naissance || !profession || !taille || !poids || !adresse || !telephone || !email) {
+            if (!nom_prenoms || !date_naissance || !lieu_naissance || !profession || !commune || !contact || !parent_tuteur || !contact_parent) {
                 message.textContent = "❌ Veuillez remplir tous les champs obligatoires.";
                 message.className = "message error";
                 submitButton.disabled = false;
@@ -522,8 +709,10 @@
                 return;
             }
 
-            if (!validatePhone(telephoneInput) || !validateEmail(document.getElementById("email"))) {
-                message.textContent = "❌ Vérifie le format de ton téléphone ou de ton email.";
+            if (!validateAge(date_naissance) || !validateCommune(commune) ||
+                !validatePhone(contactInput, "contact-error") ||
+                !validatePhone(contactParentInput, "contact-parent-error")) {
+                message.textContent = "❌ Vérifiez vos informations (âge, commune ou contacts).";
                 message.className = "message error";
                 submitButton.disabled = false;
                 submitButton.classList.remove("loading");
@@ -531,16 +720,14 @@
             }
 
             const data = {
-                nom,
-                prenom,
-                sexe,
+                nom_prenoms,
                 date_naissance,
+                lieu_naissance,
                 profession,
-                taille,
-                poids,
-                adresse,
-                telephone,
-                email
+                commune,
+                contact,
+                parent_tuteur,
+                contact_parent
             };
 
             try {
@@ -551,12 +738,16 @@
                     body: JSON.stringify(data)
                 });
 
-                message.textContent = "✅ Préinscription envoyée avec succès ! La CRA Abidjan 1 te contactera prochainement.";
+                message.textContent = "✅ Pré-inscription enregistrée avec succès !";
                 message.className = "message success";
+                whatsappNote.classList.add("visible");
+                whatsappBtn.classList.add("visible");
                 document.getElementById("form").reset();
             } catch (error) {
-                message.textContent = "✅ Préinscription envoyée (vérification en cours).";
+                message.textContent = "✅ Pré-inscription envoyée. Rejoins le groupe WhatsApp pour finaliser.";
                 message.className = "message success";
+                whatsappNote.classList.add("visible");
+                whatsappBtn.classList.add("visible");
                 document.getElementById("form").reset();
             } finally {
                 submitButton.disabled = false;

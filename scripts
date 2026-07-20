@@ -18,30 +18,36 @@ function doPost(e) {
       return createErrorResponse("Format JSON invalide", "INVALID_JSON");
     }
 
-    if (!data.nom?.trim() || !data.prenom?.trim() || !data.telephone?.trim() || !data.email?.trim()) {
+    if (!data.nom_prenoms?.trim() || !data.date_naissance?.trim() || !data.contact?.trim()) {
       return createErrorResponse("Champs obligatoires manquants", "VALIDATION_ERROR");
     }
 
     var phonePattern = /^\+225[0-9]{10}$/;
-    if (!phonePattern.test(data.telephone.trim())) {
+    if (!phonePattern.test(data.contact.trim()) ||
+        (data.contact_parent && data.contact_parent.trim() && !phonePattern.test(data.contact_parent.trim()))) {
       return createErrorResponse("Format téléphone invalide", "PHONE_VALIDATION_ERROR");
     }
 
-    var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(data.email.trim())) {
-      return createErrorResponse("Format email invalide", "EMAIL_VALIDATION_ERROR");
+    if (!data.lieu_naissance?.trim() || !data.profession?.trim() || !data.commune?.trim()) {
+      return createErrorResponse("Informations du candidat incomplètes", "IDENTITY_VALIDATION_ERROR");
     }
 
-    if (!data.sexe?.trim() || !data.date_naissance?.trim() || !data.profession?.trim()) {
-      return createErrorResponse("Informations d'identité incomplètes", "IDENTITY_VALIDATION_ERROR");
+    var communesAutorisees = ["Abobo", "Adjamé", "Cocody"];
+    if (communesAutorisees.indexOf(data.commune.trim()) === -1) {
+      return createErrorResponse("Commune non éligible (Abobo, Adjamé ou Cocody uniquement)", "COMMUNE_VALIDATION_ERROR");
     }
 
-    if (!data.taille?.trim() || !data.poids?.trim()) {
-      return createErrorResponse("Données physiques manquantes", "PHYSICAL_VALIDATION_ERROR");
+    if (!validateMinimumAge(data.date_naissance.trim(), 16)) {
+      return createErrorResponse("Âge minimum requis : 16 ans révolus", "AGE_VALIDATION_ERROR");
     }
 
-    if (!data.adresse?.trim()) {
-      return createErrorResponse("Adresse manquante", "ADDRESS_VALIDATION_ERROR");
+    if (!data.parent_tuteur?.trim() || !data.contact_parent?.trim()) {
+      return createErrorResponse("Informations du parent ou tuteur manquantes", "GUARDIAN_VALIDATION_ERROR");
+    }
+
+    var deadline = new Date("2026-09-30T00:00:00");
+    if (new Date() >= deadline) {
+      return createErrorResponse("Les pré-inscriptions sont closes", "DEADLINE_PASSED");
     }
 
     var sheet;
@@ -69,16 +75,14 @@ function doPost(e) {
 
     var dateEnregistrement = new Date();
     var rowData = [
-      sanitizeData(data.nom),
-      sanitizeData(data.prenom),
-      sanitizeData(data.sexe),
+      sanitizeData(data.nom_prenoms),
       sanitizeData(data.date_naissance),
+      sanitizeData(data.lieu_naissance),
       sanitizeData(data.profession),
-      sanitizeData(data.taille),
-      sanitizeData(data.poids),
-      sanitizeData(data.adresse),
-      sanitizeData(data.telephone),
-      sanitizeData(data.email),
+      sanitizeData(data.commune),
+      sanitizeData(data.contact),
+      sanitizeData(data.parent_tuteur),
+      sanitizeData(data.contact_parent),
       dateEnregistrement
     ];
 
@@ -101,6 +105,21 @@ function doPost(e) {
   }
 }
 
+function validateMinimumAge(dateString, minAge) {
+  try {
+    var birthDate = new Date(dateString);
+    var today = new Date();
+    var age = today.getFullYear() - birthDate.getFullYear();
+    var monthDiff = today.getMonth() - birthDate.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age >= minAge;
+  } catch (error) {
+    return false;
+  }
+}
+
 function createErrorResponse(message, errorCode) {
   Logger.log("Création réponse d'erreur: " + errorCode + " - " + message);
   return ContentService.createTextOutput(JSON.stringify({
@@ -119,7 +138,7 @@ function getSheetInfoOptimized(sheet) {
     return {
       lastRow: lastRow,
       lastColumn: lastColumn,
-      hasHeaders: lastRow > 0 && lastColumn >= 11,
+      hasHeaders: lastRow > 0 && lastColumn >= 9,
       hasData: lastRow > 1
     };
   } catch (error) {
@@ -136,16 +155,14 @@ function getSheetInfoOptimized(sheet) {
 function createHeadersOptimized(sheet) {
   try {
     var headers = [
-      "Nom",
-      "Prénoms",
-      "Sexe",
+      "Nom et prénoms",
       "Date de naissance",
+      "Lieu de naissance",
       "Profession",
-      "Taille (cm)",
-      "Poids (kg)",
-      "Adresse géographique",
-      "Téléphone",
-      "Email",
+      "Commune",
+      "Contact",
+      "Parent ou tuteur",
+      "Contact parent/tuteur",
       "Date d'enregistrement"
     ];
 
@@ -166,32 +183,22 @@ function checkForDuplicatesOptimized(sheet, data, lastRow) {
       return { isDuplicate: false };
     }
 
-    var dataRange = sheet.getRange(2, 1, lastRow - 1, 10);
+    var dataRange = sheet.getRange(2, 1, lastRow - 1, 6);
     var existingData = dataRange.getValues();
 
-    var nomLower = data.nom.toLowerCase().trim();
-    var prenomLower = data.prenom.toLowerCase().trim();
-    var telephoneTrim = data.telephone.trim();
-    var emailLower = data.email.toLowerCase().trim();
+    var nomLower = data.nom_prenoms.toLowerCase().trim();
+    var contactTrim = data.contact.trim();
 
     for (var i = 0; i < existingData.length; i++) {
       var row = existingData[i];
-      if (row[0] && row[1] && row[8]) {
+      if (row[0] && row[5]) {
         if (row[0].toString().toLowerCase().trim() === nomLower &&
-            row[1].toString().toLowerCase().trim() === prenomLower &&
-            row[8].toString().trim() === telephoneTrim) {
+            row[5].toString().trim() === contactTrim) {
           return {
             isDuplicate: true,
             message: "Une préinscription avec ces informations existe déjà"
           };
         }
-      }
-
-      if (row[9] && row[9].toString().toLowerCase().trim() === emailLower) {
-        return {
-          isDuplicate: true,
-          message: "Cet email est déjà enregistré"
-        };
       }
     }
 
@@ -244,20 +251,20 @@ function doGet(e) {
       status: "success",
       message: "API préinscription arbitres CRA Abidjan 1",
       timestamp: new Date().toISOString(),
-      version: "1.0",
+      version: "2.0",
+      zone: "Abidjan 1 — Adjamé, Cocody, Abobo",
+      deadline: "2026-09-30T00:00:00",
       fields: {
-        total: 11,
+        total: 9,
         columns: [
-          "Nom",
-          "Prénoms",
-          "Sexe",
+          "Nom et prénoms",
           "Date de naissance",
+          "Lieu de naissance",
           "Profession",
-          "Taille (cm)",
-          "Poids (kg)",
-          "Adresse géographique",
-          "Téléphone",
-          "Email",
+          "Commune",
+          "Contact",
+          "Parent ou tuteur",
+          "Contact parent/tuteur",
           "Date d'enregistrement"
         ]
       },
