@@ -18,6 +18,11 @@ function doPost(e) {
       return createErrorResponse("Format JSON invalide", "INVALID_JSON");
     }
 
+    var FORM_TOKEN = "cra-ab1-2026-Xk9Qm7Pz2Rt5Vw8Ld3Nb6Hy";
+    if (!data.token || data.token !== FORM_TOKEN) {
+      return createErrorResponse("Requête non autorisée", "UNAUTHORIZED");
+    }
+
     if (!data.nom_prenoms?.trim() || !data.date_naissance?.trim() || !data.contact?.trim()) {
       return createErrorResponse("Champs obligatoires manquants", "VALIDATION_ERROR");
     }
@@ -138,7 +143,7 @@ function savePaymentProof(base64Data, mimeType, fileName, candidateName) {
     var folder = getOrCreateProofFolder();
     var blob = Utilities.newBlob(Utilities.base64Decode(base64Data), mimeType, finalName);
     var file = folder.createFile(blob);
-    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    file.setSharing(DriveApp.Access.PRIVATE, DriveApp.Permission.NONE);
 
     return file.getUrl();
   } catch (error) {
