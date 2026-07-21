@@ -674,7 +674,7 @@
             <p>Les champs marqués <strong style="color:#dc2626">*</strong> sont obligatoires</p>
         </div>
 
-        <form id="form">
+        <form id="form" novalidate>
             <section class="card">
                 
 
@@ -887,7 +887,7 @@
         function normalizePhone(input) {
             let value = input.value.replace(/\s/g, "");
             if (/^0[0-9]{9}$/.test(value)) {
-                value = "+225" + value.substring(1);
+                value = "+225" + value;
             }
             return value;
         }
@@ -951,7 +951,6 @@
             submitButton.disabled = true;
             submitButton.classList.add("loading");
             message.className = "message";
-            message.style.display = "none";
             whatsappBtn.classList.remove("visible");
             nextSteps.classList.remove("visible");
 
