@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recrutement Élèves Arbitres — CRA Abidjan 1</title>
+    <link rel="icon" type="image/jpeg" href="logo.jpg">
     <style>
         * {
             box-sizing: border-box;
@@ -36,11 +37,12 @@
         }
 
         .hero-badge img {
-            width: 52px;
-            height: 52px;
-            border-radius: 50%;
-            object-fit: cover;
-            object-position: center top;
+            width: 64px;
+            height: 64px;
+            border-radius: 12px;
+            object-fit: contain;
+            background: #fff;
+            padding: 4px;
             border: 2px solid #f59e0b;
         }
 
@@ -469,7 +471,15 @@
         }
 
         .file-upload input[type="file"] {
-            display: none;
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+            opacity: 0;
         }
 
         .file-upload-label {
@@ -598,7 +608,7 @@
 <body>
     <header class="hero">
         <div class="hero-badge">
-            <img src="img1.jpeg" alt="CRA Abidjan 1">
+            <img src="logo.jpg" alt="Logo CRA Abidjan 1">
             <span>Commission Régionale<br>des Arbitres (CRA)<br>Abidjan 1</span>
         </div>
         <p class="hero-org">Recrutement d'arbitre de football</p>
