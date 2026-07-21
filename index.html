@@ -1010,12 +1010,23 @@
             };
 
             try {
-                await fetch(SCRIPT_URL, {
+                const response = await fetch(SCRIPT_URL, {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    mode: "no-cors",
+                    headers: { "Content-Type": "text/plain;charset=utf-8" },
                     body: JSON.stringify(data)
                 });
+
+                const rawResponse = await response.text();
+                let result;
+                try {
+                    result = JSON.parse(rawResponse);
+                } catch (parseError) {
+                    throw new Error("Réponse inattendue du serveur. Vérifie le déploiement du script (accès « Tout le monde »).");
+                }
+
+                if (result.status !== "success") {
+                    throw new Error(result.message || "L'enregistrement a échoué.");
+                }
 
                 message.textContent = "✅ Pré-inscription et preuve de paiement enregistrées ! Rejoins WhatsApp pour le suivi.";
                 message.className = "message success";
@@ -1026,14 +1037,8 @@
                 previewImage.src = "";
                 previewName.textContent = "";
             } catch (error) {
-                message.textContent = "✅ Pré-inscription envoyée avec ta preuve de paiement.";
-                message.className = "message success";
-                nextSteps.classList.add("visible");
-                whatsappBtn.classList.add("visible");
-                document.getElementById("form").reset();
-                filePreview.classList.remove("visible");
-                previewImage.src = "";
-                previewName.textContent = "";
+                message.textContent = "❌ " + (error.message || "Une erreur est survenue lors de l'envoi. Réessaie.");
+                message.className = "message error";
             } finally {
                 submitButton.disabled = false;
                 submitButton.classList.remove("loading");
